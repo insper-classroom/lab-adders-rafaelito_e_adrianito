@@ -24,27 +24,29 @@ def halfAdder(a, b, soma, carry):
         soma: Saida de soma.
         carry: Saida de carry.
     """
+
+
     @always_comb
     def comb():
-        pass
+        
+        soma.next = a ^ b      
+        carry.next = a & b     
+            
 
     return instances()
 
 
 @block
 def fullAdder(a, b, c, soma, carry):
-    """Somador completo de 1 bit.
+    s = [Signal(bool(0)) for i in range(3)]
+    haList = [None for i in range(2)]  # (1)
 
-    Args:
-        a: Primeira entrada de 1 bit.
-        b: Segunda entrada de 1 bit.
-        c: Carry de entrada.
-        soma: Saida de soma.
-        carry: Carry de saida.
-    """
+    haList[0] = halfAdder(a, b, s[0], s[1]) 
+    haList[1] = halfAdder(c, s[0], soma, s[2])
+
     @always_comb
     def comb():
-        pass
+        carry.next = s[1] | s[2]
 
     return instances()
 
