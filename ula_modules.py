@@ -88,6 +88,17 @@ def adder(x, y, soma, carry):
         soma: Vetor de saida com mesma largura de x/y.
         carry: Carry de saida mais significativo.
     """
+    n = len(x)
+    c = [Signal(bool(0)) for _ in range(n)]  # Carries intermediários
+    faList = [None for _ in range(n)]  # Lista de full adders
+    
+    for i in range(n):
+        # Primeiro adder tem carry_in = 0, outros têm carry_in do anterior
+        carry_in = Signal(bool(0)) if i == 0 else c[i - 1]
+        # Último adder tem carry_out = carry final
+        carry_out = carry if i == n - 1 else c[i]
+        faList[i] = fullAdder(x[i], y[i], carry_in, soma[i], carry_out)
+
     return instances()
 
 
@@ -106,6 +117,8 @@ def addervb(x, y, soma, carry):
     """
     @always_comb
     def comb():
-        pass
+        result = x + y
+        soma.next = result
+        carry.next = (result >> len(soma)) & 1
 
     return instances()
