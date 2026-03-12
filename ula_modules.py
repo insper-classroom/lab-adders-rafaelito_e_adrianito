@@ -64,6 +64,14 @@ def adder2bits(x, y, soma, carry):
         soma: Vetor de saida de 2 bits.
         carry: Carry de saida.
     """
+    c_int = Signal(bool(0))  # Carry intermediário entre adders
+    
+    # Primeiro full adder: carry_in = 0
+    b1 = fullAdder(x[0], y[0], Signal(bool(0)), soma[0], c_int)
+    
+    # Segundo full adder: carry_in = c_int (ripple-carry)
+    b2 = fullAdder(x[1], y[1], c_int, soma[1], carry)
+
     return instances()
 
 
